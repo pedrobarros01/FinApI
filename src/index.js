@@ -4,6 +4,7 @@
     id -> uuid
     statement -> [] 
 */
+const { response } = require('express');
 const express = require('express');
 const {v4: uuidv4} = require("uuid");
 const app = express();
@@ -102,6 +103,29 @@ app.get("/statement/date", verifyIfExistsAccountCpf,  (request, response) => {
     return response.json(statement);
 });
 
+app.put("/account", verifyIfExistsAccountCpf , (request, response) => {
+    const {name} = request.body;
+    const {customer} = request;
+    customer.name = name;
+    return response.status(201).send();
+});
 
+app.get("/account", verifyIfExistsAccountCpf, (request, response) => {
+    const {customer} = request;
+    return response.json(customer);
+});
+
+app.delete("/account", verifyIfExistsAccountCpf, (request, response) => {
+    const { customer } = request;
+    customers.splice(customer, 1);
+    return response.status(200).json(customers);
+
+});
+
+app.get("/balance", verifyIfExistsAccountCpf, (request, response) => {
+    const { customer} = request;
+    const balance = getBalance(customer.statement);
+    return response.json(balance);
+})
 
 app.listen(1313)
